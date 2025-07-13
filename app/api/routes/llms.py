@@ -2,7 +2,7 @@ from fastapi import APIRouter, status
 
 from app.crud import llm as crud
 from app.core.database import SessionDep
-from app.models.llms import LargeLanguageModelCreate, LargeLanguageModelPublic
+from app.models.llms import LargeLanguageModelCreate, LargeLanguageModelPublic, LargeLanguageModelUpdate
 
 
 router = APIRouter(prefix="/llms", tags=["llms"])
@@ -22,4 +22,10 @@ async def get_all_llms(session: SessionDep) -> list[LargeLanguageModelPublic]:
 @router.get("/{id}", response_model=LargeLanguageModelPublic, status_code=status.HTTP_200_OK)
 async def get_llm_by_id(session: SessionDep, id: str) -> LargeLanguageModelPublic:
     db_llm = await crud.select_llm_by_id(session, id)
+    return LargeLanguageModelPublic.model_validate(db_llm)
+
+
+@router.patch("/{id}", response_model=LargeLanguageModelPublic, status_code=status.HTTP_200_OK)
+async def update_llm(session: SessionDep, id: str, llm: LargeLanguageModelUpdate) -> LargeLanguageModelPublic:
+    db_llm = await crud.update_llm(session, id, llm)
     return LargeLanguageModelPublic.model_validate(db_llm)
