@@ -24,3 +24,8 @@ class LargeLanguageModelPublic(LargeLanguageModelBase):
 
 class LargeLanguageModelCreate(LargeLanguageModelBase):
     pass
+
+
+class LargeLanguageModelUpdate(SQLModel):
+    free: bool | None = None
+    description: str | None = None
