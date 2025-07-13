@@ -11,3 +11,9 @@ router = APIRouter(prefix="/llms", tags=["llms"])
 async def register_llm(session: SessionDep, llm: LargeLanguageModelCreate) -> LargeLanguageModelPublic:
     db_llm = await crud.register_llm(session, llm)
     return LargeLanguageModelPublic.model_validate(db_llm)
+
+
+@router.get("/{id}", response_model=LargeLanguageModelPublic, status_code=status.HTTP_200_OK)
+async def get_llm_by_id(session: SessionDep, id: str) -> LargeLanguageModelPublic:
+    db_llm = await crud.get_llm_by_id(session, id)
+    return LargeLanguageModelPublic.model_validate(db_llm)
