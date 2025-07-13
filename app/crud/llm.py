@@ -11,6 +11,12 @@ async def insert_llm(session: SessionDep, llm: LargeLanguageModelCreate) -> Larg
     return db_llm
 
 
+async def select_all_llms(session: SessionDep) -> list[LargeLanguageModel]:
+    result = await session.execute(select(LargeLanguageModel))
+    db_llms = result.scalars().all()
+    return db_llms
+
+
 async def select_llm_by_id(session: SessionDep, id: str) -> LargeLanguageModel:
     stmt = select(LargeLanguageModel).where(LargeLanguageModel.id == id)
     result = await session.execute(stmt)
