@@ -29,3 +29,7 @@ class LargeLanguageModelCreate(LargeLanguageModelBase):
 class LargeLanguageModelUpdate(SQLModel):
     free: bool | None = None
     description: str | None = None
+
+
+class LargeLanguageModelMessage(SQLModel):
+    message: str

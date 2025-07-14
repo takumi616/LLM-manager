@@ -2,7 +2,7 @@ from fastapi import APIRouter, status
 
 from app.crud import llm as crud
 from app.core.database import SessionDep
-from app.models.llms import LargeLanguageModelCreate, LargeLanguageModelPublic, LargeLanguageModelUpdate
+from app.models.llms import LargeLanguageModelCreate, LargeLanguageModelMessage, LargeLanguageModelPublic, LargeLanguageModelUpdate
 
 
 router = APIRouter(prefix="/llms", tags=["llms"])
@@ -29,3 +29,9 @@ async def get_llm_by_id(session: SessionDep, id: str) -> LargeLanguageModelPubli
 async def update_llm(session: SessionDep, id: str, llm: LargeLanguageModelUpdate) -> LargeLanguageModelPublic:
     db_llm = await crud.update_llm(session, id, llm)
     return LargeLanguageModelPublic.model_validate(db_llm)
+
+
+@router.delete("/{id}", response_model=LargeLanguageModelMessage, status_code=status.HTTP_200_OK)
+async def delete_llm(session: SessionDep, id: str) -> LargeLanguageModelMessage:
+    msg = await crud.delete_llm(session, id)
+    return msg
