@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from sqlalchemy import select
 from app.core.database import SessionDep
-from app.models.llms import LargeLanguageModel, LargeLanguageModelCreate, LargeLanguageModelUpdate
+from app.models.llms import LargeLanguageModel, LargeLanguageModelCreate, LargeLanguageModelMessage, LargeLanguageModelUpdate
 
 
 async def insert_llm(session: SessionDep, llm: LargeLanguageModelCreate) -> LargeLanguageModel:
@@ -37,3 +37,14 @@ async def update_llm(session: SessionDep, id: str, llm: LargeLanguageModelUpdate
     await session.commit()
     await session.refresh(llm_db)
     return llm_db
+
+
+async def delete_llm(session: SessionDep, id: str) -> LargeLanguageModelMessage:
+    result = await session.execute(select(LargeLanguageModel).where(LargeLanguageModel.id == id))
+    llm_db = result.scalars().first()
+    if not llm_db:
+        raise HTTPException(status_code=404, detail="LLM not found")
+    
+    await session.delete(llm_db)
+    await session.commit()
+    return LargeLanguageModelMessage(message="LLM deleted successfully")
